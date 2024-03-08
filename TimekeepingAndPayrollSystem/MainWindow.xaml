@@ -1,0 +1,156 @@
+﻿<Window x:Class="TimekeepingAndPayrollSystem.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TimekeepingAndPayrollSystem"
+        mc:Ignorable="d"
+        Title="Timekeeping and Payroll System" Height="650" Width="800">
+    <Window.Resources>
+        <local:GapVisibilityConverter x:Key="GapVisibilityConverter" />
+        <local:ClientNameToVisibilityConverter x:Key="ClientNameToVisibilityConverter"/>
+        <local:ClientNameToInverseVisibilityConverter x:Key="ClientNameToInverseVisibilityConverter"/>
+        <Style x:Key="FullWidthTextBox" TargetType="TextBox">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Employee and Week Info -->
+        <StackPanel Grid.Row="0" Orientation="Vertical" Margin="5">
+            <Label Content="Employee Name"/>
+            <TextBox x:Name="txtEmployeeName" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Foreground="Gray" Text="Enter employee name"/>
+            <Label Content="Supervisor Name"/>
+            <TextBox x:Name="txtSupervisorName" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Foreground="Gray" Text="Enter supervisor name"/>
+            <Label Content="Week Number"/>
+            <TextBox x:Name="txtWeekNumber" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Foreground="Gray" Text="Enter week number"/>
+        </StackPanel>
+
+        <!-- Daily Work Hours -->
+        <DataGrid x:Name="dgWeeklyHours" Grid.Row="1" AutoGenerateColumns="False" Margin="5"
+          CellEditEnding="dgWeeklyHours_CellEditEnding">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsGap}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Client" Binding="{Binding ClientName}" />
+                <DataGridTextColumn Header="Contract" Binding="{Binding ContractType}" />
+                <DataGridTextColumn Header="Project(s)" Binding="{Binding ProjectDetails}" />
+                <DataGridTextColumn Header="Employee Billing Level" Binding="{Binding BillingLevel}" />
+                <!-- Columns for each day of the week -->
+
+                <DataGridTemplateColumn Header="Mon">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <!-- CheckBox visible only for the special row -->
+                                <CheckBox IsChecked="{Binding IsMondayChecked, Mode=TwoWay}" Visibility="{Binding ClientName, Converter={StaticResource ClientNameToVisibilityConverter}, ConverterParameter=Monday}" />
+                                <TextBox Text="{Binding HoursMonday, UpdateSourceTrigger=PropertyChanged}"
+                         Visibility="{Binding ClientName, Converter={StaticResource ClientNameToInverseVisibilityConverter}}" 
+                                         Style="{StaticResource FullWidthTextBox}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Tue">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <!-- CheckBox visible only for the special row -->
+                                <CheckBox IsChecked="{Binding IsTuesdayChecked, Mode=TwoWay}" Visibility="{Binding ClientName, Converter={StaticResource ClientNameToVisibilityConverter}, ConverterParameter=Tuesday}" />
+                                <TextBox Text="{Binding HoursTuesday, UpdateSourceTrigger=PropertyChanged}"
+                                Visibility="{Binding ClientName, Converter={StaticResource ClientNameToInverseVisibilityConverter}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Wed">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <!-- CheckBox visible only for the special row -->
+                                <CheckBox IsChecked="{Binding IsWednesdayChecked, Mode=TwoWay}" Visibility="{Binding ClientName, Converter={StaticResource ClientNameToVisibilityConverter}, ConverterParameter=Wednesday}" />
+                                <TextBox Text="{Binding HoursWednesday, UpdateSourceTrigger=PropertyChanged}"
+                                Visibility="{Binding ClientName, Converter={StaticResource ClientNameToInverseVisibilityConverter}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Thu">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <!-- CheckBox visible only for the special row -->
+                                <CheckBox IsChecked="{Binding IsThursdayChecked, Mode=TwoWay}" Visibility="{Binding ClientName, Converter={StaticResource ClientNameToVisibilityConverter}, ConverterParameter=Thursday}" />
+                                <TextBox Text="{Binding HoursThursday, UpdateSourceTrigger=PropertyChanged}"
+                                Visibility="{Binding ClientName, Converter={StaticResource ClientNameToInverseVisibilityConverter}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Fri">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <!-- CheckBox visible only for the special row -->
+                                <CheckBox IsChecked="{Binding IsFridayChecked, Mode=TwoWay}" Visibility="{Binding ClientName, Converter={StaticResource ClientNameToVisibilityConverter}, ConverterParameter=Friday}" />
+                                <TextBox Text="{Binding HoursFriday, UpdateSourceTrigger=PropertyChanged}"
+                                Visibility="{Binding ClientName, Converter={StaticResource ClientNameToInverseVisibilityConverter}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Sat">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <!-- CheckBox visible only for the special row -->
+                                <CheckBox IsChecked="{Binding IsSaturdayChecked, Mode=TwoWay}" Visibility="{Binding ClientName, Converter={StaticResource ClientNameToVisibilityConverter}, ConverterParameter=Saturday}" />
+                                <TextBox Text="{Binding HoursSaturday, UpdateSourceTrigger=PropertyChanged}"
+                                Visibility="{Binding ClientName, Converter={StaticResource ClientNameToInverseVisibilityConverter}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Sun">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <!-- CheckBox visible only for the special row -->
+                                <CheckBox IsChecked="{Binding IsSundayChecked, Mode=TwoWay}" Visibility="{Binding ClientName, Converter={StaticResource ClientNameToVisibilityConverter}, ConverterParameter=Sunday}" />
+                                <TextBox Text="{Binding HoursSunday, UpdateSourceTrigger=PropertyChanged}"
+                                Visibility="{Binding ClientName, Converter={StaticResource ClientNameToInverseVisibilityConverter}}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Column for Total -->
+                <DataGridTextColumn Header="Total" Binding="{Binding TotalHours}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Submission and Calculation -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+            <Button x:Name="btnSubmit" Content="Submit" Click="BtnSubmit_Click" Margin="5"/>
+            <Button x:Name="btnReset" Content="Reset" Click="BtnReset_Click" Margin="5"/>
+        </StackPanel>
+        
+
+    </Grid>
+</Window>
